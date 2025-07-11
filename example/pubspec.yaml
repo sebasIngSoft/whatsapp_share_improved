@@ -29,10 +29,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  screenshot: ^2.1.0
+  screenshot: ^3.0.0
   path_provider: ^2.1.1
   image_picker: ^0.8.6+1
-  file_picker: ^5.2.5
 
   whatsapp_share:
     path: ../
