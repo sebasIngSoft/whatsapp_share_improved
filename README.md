@@ -1,8 +1,8 @@
-# [Whatsapp Share Plugin](https://pub.dev/packages/whatsapp_share)
+# [Whatsapp Share Improved Plugin](https://pub.dev/packages/whatsapp_share)
 
-[![pub package](https://img.shields.io/pub/v/whatsapp_share.svg)](https://pub.dartlang.org/packages/flutter_share)
+[![pub package]](https://pub.dartlang.org/packages/flutter_share)
 
-
+This is a Fork for whatsapp_share.
 A Flutter plugin for Android providing a simple way to share a message, link or local files to specific WhatsApp contact.
 
 ## Features:

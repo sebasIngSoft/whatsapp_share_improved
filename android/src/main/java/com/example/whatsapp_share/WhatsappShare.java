@@ -1,5 +1,6 @@
 package com.example.whatsapp_share;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,48 +15,59 @@ import java.io.File;
 import java.util.ArrayList;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding;
 
 
-/** WhatsappShare */
-public class WhatsappShare implements FlutterPlugin, MethodCallHandler {
+/**
+ * WhatsappShare
+ */
+public class WhatsappShare implements FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
+
     private Context context;
-    private MethodChannel methodChannel;
+    private MethodChannel channel;
+    private Activity activity;
 
-    public WhatsappShare() {}
-
-    /** Plugin registration. */
-    @SuppressWarnings("deprecation")
-    public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
-        final WhatsappShare instance = new WhatsappShare();
-        instance.onAttachedToEngine(registrar.context(), registrar.messenger());
+    public WhatsappShare() {
     }
 
     @Override
-    public void onAttachedToEngine(FlutterPluginBinding binding) {
-        onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
-    }
-
-    private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
-        this.context = applicationContext;
-        methodChannel = new MethodChannel(messenger, "whatsapp_share");
-        methodChannel.setMethodCallHandler(this);
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        context = binding.getApplicationContext();
+        channel = new MethodChannel(binding.getBinaryMessenger(), "whatsapp_share");
+        channel.setMethodCallHandler(this);
     }
 
     @Override
     public void onDetachedFromEngine(FlutterPluginBinding binding) {
-        context = null;
-        methodChannel.setMethodCallHandler(null);
-        methodChannel = null;
+        channel.setMethodCallHandler(null);
+        channel = null;
     }
 
     @Override
-    public void onMethodCall(MethodCall call, Result result) {
+    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        activity = binding.getActivity();
+    }
+
+    @Override
+    public void onDetachedFromActivityForConfigChanges() {
+    }
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        activity = binding.getActivity();
+    }
+
+    @Override
+    public void onDetachedFromActivity() {
+        activity = null;
+    }
+
+    @Override
+    public void onMethodCall(MethodCall call, MethodChannel.Result result) {
         if (call.method.equals("shareFile")) {
             shareFile(call, result);
         } else if (call.method.equals("share")) {
@@ -68,23 +80,19 @@ public class WhatsappShare implements FlutterPlugin, MethodCallHandler {
     }
 
     private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
-         try
-        {
+        try {
             packageManager.getPackageInfo(packageName, 0);
             return true;
-        }
-        catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
     }
 
-    private void isInstalled(MethodCall call, Result result) {
-        try
-        {
+    private void isInstalled(MethodCall call, MethodChannel.Result result) {
+        try {
             String packageName = call.argument("package");
 
-            if (packageName == null || packageName.isEmpty())
-            {
+            if (packageName == null || packageName.isEmpty()) {
                 Log.println(Log.ERROR, "", "FlutterShare Error: Package name null or empty");
                 result.error("FlutterShare:Package name cannot be null or empty", null, null);
                 return;
@@ -93,17 +101,14 @@ public class WhatsappShare implements FlutterPlugin, MethodCallHandler {
             PackageManager pm = context.getPackageManager();
             boolean isInstalled = isPackageInstalled(packageName, pm);
             result.success(isInstalled);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Log.println(Log.ERROR, "", "FlutterShare: Error");
             result.error(ex.getMessage(), null, null);
         }
     }
 
-    private void share(MethodCall call, Result result) {
-        try
-        {
+    private void share(MethodCall call, MethodChannel.Result result) {
+        try {
             String title = call.argument("title");
             String text = call.argument("text");
             String linkUrl = call.argument("linkUrl");
@@ -111,17 +116,15 @@ public class WhatsappShare implements FlutterPlugin, MethodCallHandler {
             String phone = call.argument("phone");
             String packageName = call.argument("package");
 
-            if (title == null || title.isEmpty())
-            {
+            if (title == null || title.isEmpty()) {
                 Log.println(Log.ERROR, "", "FlutterShare Error: Title null or empty");
                 result.error("FlutterShare: Title cannot be null or empty", null, null);
                 return;
-            } else if(phone == null || phone.isEmpty())
-            {   Log.println(Log.ERROR, "", "FlutterShare Error: phone null or empty");
+            } else if (phone == null || phone.isEmpty()) {
+                Log.println(Log.ERROR, "", "FlutterShare Error: phone null or empty");
                 result.error("FlutterShare: phone cannot be null or empty", null, null);
                 return;
-            } else if (packageName == null || packageName.isEmpty())
-            {
+            } else if (packageName == null || packageName.isEmpty()) {
                 Log.println(Log.ERROR, "", "FlutterShare Error: Package name null or empty");
                 result.error("FlutterShare:Package name cannot be null or empty", null, null);
                 return;
@@ -148,29 +151,27 @@ public class WhatsappShare implements FlutterPlugin, MethodCallHandler {
             intent.setAction(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.setPackage(packageName);
-            intent.putExtra("jid",phone + "@s.whatsapp.net");
+            intent.putExtra("jid", phone + "@s.whatsapp.net");
             intent.putExtra(Intent.EXTRA_SUBJECT, title);
             intent.putExtra(Intent.EXTRA_TEXT, extraText);
 
             //Intent chooserIntent = Intent.createChooser(intent, chooserTitle);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            // context.startActivity(intent);
+            activity.startActivity(intent);
 
             result.success(true);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Log.println(Log.ERROR, "", "FlutterShare: Error");
             result.error(ex.getMessage(), null, null);
         }
     }
 
-    private void shareFile(MethodCall call, Result result) {
+    private void shareFile(MethodCall call, MethodChannel.Result result) {
         ArrayList<String> filePaths = new ArrayList<String>();
         ArrayList<Uri> files = new ArrayList<Uri>();
-        try
-        {
+        try {
             String title = call.argument("title");
             String text = call.argument("text");
             filePaths = call.argument("filePath");
@@ -178,23 +179,21 @@ public class WhatsappShare implements FlutterPlugin, MethodCallHandler {
             String phone = call.argument("phone");
             String packageName = call.argument("package");
 
-            if (filePaths == null || filePaths.isEmpty())
-            {
+            if (filePaths == null || filePaths.isEmpty()) {
                 Log.println(Log.ERROR, "", "FlutterShare: ShareLocalFile Error: filePath null or empty");
                 result.error("FlutterShare: FilePath cannot be null or empty", null, null);
                 return;
-            } else if(phone == null || phone.isEmpty())
-            {   Log.println(Log.ERROR, "", "FlutterShare Error: phone null or empty");
+            } else if (phone == null || phone.isEmpty()) {
+                Log.println(Log.ERROR, "", "FlutterShare Error: phone null or empty");
                 result.error("FlutterShare: phone cannot be null or empty", null, null);
                 return;
-            } else if (packageName == null || packageName.isEmpty())
-            {
+            } else if (packageName == null || packageName.isEmpty()) {
                 Log.println(Log.ERROR, "", "FlutterShare Error: Package name null or empty");
                 result.error("FlutterShare:Package name cannot be null or empty", null, null);
                 return;
             }
 
-            for(int i=0;i<filePaths.size();i++){
+            for (int i = 0; i < filePaths.size(); i++) {
                 File file = new File(filePaths.get(i));
                 Uri fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
                 files.add(fileUri);
@@ -206,19 +205,18 @@ public class WhatsappShare implements FlutterPlugin, MethodCallHandler {
             intent.setAction(Intent.ACTION_SEND_MULTIPLE);
             intent.setType("*/*");
             intent.setPackage(packageName);
-            intent.putExtra("jid",phone + "@s.whatsapp.net");
+            intent.putExtra("jid", phone + "@s.whatsapp.net");
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             //Intent chooserIntent = Intent.createChooser(intent, chooserTitle);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            // context.startActivity(intent);
+            activity.startActivity(intent);
 
             result.success(true);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             result.error(ex.getMessage(), null, null);
             Log.println(Log.ERROR, "", "FlutterShare: Error");
         }

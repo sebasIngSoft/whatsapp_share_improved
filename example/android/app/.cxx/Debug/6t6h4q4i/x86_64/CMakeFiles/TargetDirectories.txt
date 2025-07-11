@@ -1,0 +1,2 @@
+C:/contribuir/whatsapp_share_improved/example/android/app/.cxx/Debug/6t6h4q4i/x86_64/CMakeFiles/edit_cache.dir
+C:/contribuir/whatsapp_share_improved/example/android/app/.cxx/Debug/6t6h4q4i/x86_64/CMakeFiles/rebuild_cache.dir
