@@ -16,10 +16,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-authors:
-  - Amitpatil215 <https://github.com/Amitpatil215>
-  - sebasIngSoft <https://github.com/sebasIngSoft>
-
 environment:
   sdk: '>=2.12.0 <4.0.0'
   flutter: ">=1.20.0"

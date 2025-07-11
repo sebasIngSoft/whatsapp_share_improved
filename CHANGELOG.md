@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.3
+
+* Complete migration to Android embedding v2
+* Added `namespace` in Android and Kotlin
+
 ## 2.0.2
 
 * File not sharing issue fixed addresses issues -> #17, #16
