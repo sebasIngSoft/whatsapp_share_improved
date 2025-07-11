@@ -1,5 +1,5 @@
 name: whatsapp_share_improved
-description: Fork from whatsapp_share with namespace and fix AGP 7+
+description: Fork from whatsapp_share with namespace and fix AGP 7+ and y embedding v2
 version: 2.0.3
 homepage: https://github.com/sebasIngSoft/whatsapp_share_improved
 
@@ -16,6 +16,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+authors:
+  - Amitpatil215 <https://github.com/Amitpatil215>
+  - sebasIngSoft <https://github.com/sebasIngSoft>
 
 environment:
   sdk: '>=2.12.0 <4.0.0'
