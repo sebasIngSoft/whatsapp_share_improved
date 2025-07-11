@@ -1,4 +1,4 @@
-name: whatsapp_share
+name: whatsapp_share_improved
 description: Fork from whatsapp_share with namespace and fix AGP 7+
 version: 2.0.3
 homepage: https://github.com/sebasIngSoft/whatsapp_share_improved
@@ -10,7 +10,7 @@ dependencies:
 flutter:
   plugin:
     androidPackage: com.example.whatsapp_share
-    pluginClass: WhatsappShare
+    pluginClass: WhatsappShareImproved
 
 dev_dependencies:
   flutter_test:

@@ -25,19 +25,19 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding;
 /**
  * WhatsappShare
  */
-public class WhatsappShare implements FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
+public class WhatsappShareImproved implements FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
 
     private Context context;
     private MethodChannel channel;
     private Activity activity;
 
-    public WhatsappShare() {
+    public WhatsappShareImproved() {
     }
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
         context = binding.getApplicationContext();
-        channel = new MethodChannel(binding.getBinaryMessenger(), "whatsapp_share");
+        channel = new MethodChannel(binding.getBinaryMessenger(), "whatsapp_share_improved");
         channel.setMethodCallHandler(this);
     }
 
@@ -155,10 +155,9 @@ public class WhatsappShare implements FlutterPlugin, MethodChannel.MethodCallHan
             intent.putExtra(Intent.EXTRA_SUBJECT, title);
             intent.putExtra(Intent.EXTRA_TEXT, extraText);
 
-            //Intent chooserIntent = Intent.createChooser(intent, chooserTitle);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            // context.startActivity(intent);
+
             activity.startActivity(intent);
 
             result.success(true);
@@ -209,10 +208,9 @@ public class WhatsappShare implements FlutterPlugin, MethodChannel.MethodCallHan
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-            //Intent chooserIntent = Intent.createChooser(intent, chooserTitle);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            // context.startActivity(intent);
+
             activity.startActivity(intent);
 
             result.success(true);

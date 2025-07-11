@@ -33,7 +33,7 @@ dependencies:
   path_provider: ^2.1.1
   image_picker: ^0.8.6+1
 
-  whatsapp_share:
+  whatsapp_share_improved:
     path: ../
   flutter:
     sdk: flutter

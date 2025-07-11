@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:whatsapp_share/whatsapp_share.dart';
+import 'package:whatsapp_share_improved/whatsapp_share_improved.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   Future<void> share() async {
-    await WhatsappShare.share(
+    await WhatsappShareImproved.share(
       text: 'Example share text',
       linkUrl: 'https://flutter.dev/',
       phone: '911234567890',
@@ -35,14 +35,15 @@ class MyApp extends StatelessWidget {
     }
     debugPrint('${directory?.path} / ${_image?.path}');
 
-    await WhatsappShare.shareFile(
+    await WhatsappShareImproved.shareFile(
       phone: '911234567890',
       filePath: ["${_image?.path}"],
     );
   }
 
   Future<void> isInstalled() async {
-    final val = await WhatsappShare.isInstalled(package: Package.whatsapp);
+    final val =
+        await WhatsappShareImproved.isInstalled(package: Package.whatsapp);
     debugPrint('Whatsapp is installed: $val');
   }
 
@@ -54,15 +55,14 @@ class MyApp extends StatelessWidget {
       directory = await getApplicationDocumentsDirectory();
     }
 
-    final String? localPath =
-        await _controller.captureAndSave(directory!.path);
+    final String? localPath = await _controller.captureAndSave(directory!.path);
 
     await Future.delayed(const Duration(seconds: 1));
     if (localPath == null) {
       log("localPath is null");
     }
 
-    await WhatsappShare.shareFile(
+    await WhatsappShareImproved.shareFile(
       phone: '911234567890',
       filePath: [localPath!],
     );

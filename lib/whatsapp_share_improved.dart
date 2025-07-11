@@ -7,8 +7,9 @@ import 'package:flutter/services.dart';
 /// Select Whatsapp Type
 enum Package { whatsapp, businessWhatsapp }
 
-class WhatsappShare {
-  static const MethodChannel _channel = MethodChannel('whatsapp_share');
+class WhatsappShareImproved {
+  static const MethodChannel _channel =
+      MethodChannel('whatsapp_share_improved');
 
   /// Checks whether whatsapp is installed in device or not
   ///
@@ -62,8 +63,7 @@ class WhatsappShare {
   static Future<bool?> shareFile({
     required List<String> filePath,
     required String phone,
-    @Deprecated(
-        "No support for text along with files, this field is ignored")
+    @Deprecated("No support for text along with files, this field is ignored")
     String? text,
     Package package = Package.whatsapp,
   }) async {
